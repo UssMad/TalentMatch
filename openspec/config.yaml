@@ -7,7 +7,7 @@ schema: spec-driven
 
 context: |
   Project Name: TalentMatch
-  Stack: Laravel 11+, PHP 8.3, MySQL, Redis (queues), Laravel Breeze, Laravel AI SDK
+  Stack: Laravel 13+, PHP 8.3, MySQL, Redis (queues), Laravel Breeze, Laravel AI SDK
 
   Description:
   TalentMatch is an AI-powered recruitment system that analyzes CVs against job offers.

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +17,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('job-offers', JobOfferController::class);
+
+    Route::resource('job-offers.candidates', CandidateController::class);
 });
 
 require __DIR__.'/auth.php';
