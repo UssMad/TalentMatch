@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('job-offers', JobOfferController::class);
 
     Route::resource('job-offers.candidates', CandidateController::class);
+
+    Route::post('job-offers/{jobOffer}/candidates/{candidate}/analyze', [AnalysisController::class, 'trigger'])
+        ->name('job-offers.candidates.analyze');
 });
 
 require __DIR__.'/auth.php';
