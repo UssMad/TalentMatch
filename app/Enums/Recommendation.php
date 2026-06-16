@@ -3,9 +3,10 @@
 namespace App\Enums;
 
 enum Recommendation: string
-
 {
-    case CONVOQUER = 'convoquer';
-    case ATTENTE = 'attente';
-    case REJETER = 'rejeter';
+    case StronglyRecommend = 'Strongly Recommend';
+    case Recommend = 'Recommend';
+    case Consider = 'Consider';
+    case NotRecommended = 'Not Recommended';
+    case NoDecision = 'No Decision';
 }
