@@ -8,7 +8,6 @@ use App\Models\Candidate;
 use App\Models\JobOffer;
 use App\Services\CandidateService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class CandidateController extends Controller
@@ -19,7 +18,7 @@ class CandidateController extends Controller
 
     public function index(JobOffer $jobOffer): View
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('viewAny', [Candidate::class, $jobOffer]);
 
         $candidates = $this->candidateService->list($jobOffer);
 
@@ -28,14 +27,14 @@ class CandidateController extends Controller
 
     public function create(JobOffer $jobOffer): View
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('create', [Candidate::class, $jobOffer]);
 
         return view('candidates.create', compact('jobOffer'));
     }
 
     public function store(StoreCandidateRequest $request, JobOffer $jobOffer): RedirectResponse
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('create', [Candidate::class, $jobOffer]);
 
         $data = array_merge($request->validated(), [
             'job_offer_id' => $jobOffer->id,
@@ -49,7 +48,7 @@ class CandidateController extends Controller
 
     public function show(JobOffer $jobOffer, Candidate $candidate): View
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('view', $candidate);
 
         $candidate = $this->candidateService->find($candidate);
 
@@ -58,14 +57,14 @@ class CandidateController extends Controller
 
     public function edit(JobOffer $jobOffer, Candidate $candidate): View
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('update', $candidate);
 
         return view('candidates.edit', compact('jobOffer', 'candidate'));
     }
 
     public function update(UpdateCandidateRequest $request, JobOffer $jobOffer, Candidate $candidate): RedirectResponse
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('update', $candidate);
 
         $this->candidateService->update($candidate, $request->validated());
 
@@ -75,7 +74,7 @@ class CandidateController extends Controller
 
     public function destroy(JobOffer $jobOffer, Candidate $candidate): RedirectResponse
     {
-        Gate::authorize('modify', $jobOffer);
+        $this->authorize('delete', $candidate);
 
         $this->candidateService->delete($candidate);
 
