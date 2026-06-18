@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('job-offers/{jobOffer}/candidates/{candidate}/analyze', [AnalysisController::class, 'trigger'])
         ->name('job-offers.candidates.analyze');
+
+    Route::get('job-offers/{jobOffer}/candidates/{candidate}/chat', [ChatController::class, 'index'])
+        ->name('job-offers.candidates.chat.index');
+    Route::get('job-offers/{jobOffer}/candidates/{candidate}/chat/{conversation}', [ChatController::class, 'show'])
+        ->name('job-offers.candidates.chat.show');
+    Route::post('job-offers/{jobOffer}/candidates/{candidate}/chat', [ChatController::class, 'store'])
+        ->name('job-offers.candidates.chat.store');
 });
 
 require __DIR__.'/auth.php';
