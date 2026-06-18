@@ -1,0 +1,96 @@
+schema: spec-driven
+
+# =========================
+# PROJECT CONTEXT (VERY IMPORTANT)
+# This is what the AI agent reads BEFORE generating any feature
+# =========================
+
+context: |
+  Project Name: TalentMatch
+  Stack: Laravel 13+, PHP 8.3, MySQL, Redis (queues), Laravel Breeze, Laravel AI SDK
+
+  Description:
+  TalentMatch is an AI-powered recruitment system that analyzes CVs against job offers.
+  It extracts structured data from CVs, computes a matching score, and enables a conversational AI assistant with memory and tool usage.
+
+  Core Architecture Principles:
+  - AI output must always follow a strict JSON schema (no free-text analysis stored)
+  - All AI-heavy operations MUST run in background queues (never in controllers)
+  - Conversation history must be persisted in database (memory-based agent)
+  - All business logic must be separated into Services
+  - Controllers must remain thin
+  - No hallucinated data allowed: AI must use tools for real database access
+
+  AI System Design:
+  - Layer 1: Structured CV Analysis (deterministic JSON output)
+  - Layer 2: Conversational Agent (tool-based + memory-based)
+
+  Tools available to the agent:
+  - getCandidateAnalysis(candidateId)
+  - getJobRequirements(jobOfferId)
+  - compareCandidates(candidateId1, candidateId2)
+
+  Data integrity rules:
+  - AI must NEVER invent scores or job requirements
+  - All analysis must be persisted in `analyses` table
+  - Enum values must be respected for recommendation field
+
+  Performance rules:
+  - Heavy AI operations must use Laravel Queues
+  - Avoid N+1 queries (use eager loading)
+  - Use Redis for queue backend
+
+# =========================
+# GLOBAL RULES FOR ALL FEATURES
+# =========================
+
+rules:
+  global:
+    - Always use Form Requests for validation
+    - Always use Eloquent relationships (no raw queries unless necessary)
+    - Always separate business logic into Services
+    - Always use Jobs for AI processing
+    - Always validate AI output before saving to DB
+    - Always use typed Enums for recommendation fields
+    - Never return AI raw output directly to UI without formatting
+    - Avoid N+1 queries at all cost
+    - Every feature must be covered by a spec before implementation
+
+# =========================
+# FEATURE-SPECIFIC RULES
+# =========================
+
+features:
+
+  auth:
+    rules:
+      - Use Laravel Breeze only
+      - Do not modify authentication core logic
+      - Keep authentication controllers untouched when possible
+
+  job_offers:
+    rules:
+      - Required skills must be stored as JSON array
+      - Minimum experience must be integer
+      - Only authenticated users can create offers
+
+  candidates:
+    rules:
+      - CV text must be stored as longText
+      - Candidate must belong to a job offer
+      - Deleting job offer must cascade delete candidates
+
+  ai_analysis:
+    rules:
+      - MUST use structured JSON output only
+      - MUST validate AI response before saving
+      - MUST run analysis inside a Queue Job
+      - MUST NOT block HTTP request
+      - Matching score must be integer between 0 and 100
+
+  conversation_agent:
+    rules:
+      - Must persist all messages in database
+      - Must use tool calling for any database-related question
+      - Must maintain conversation context across messages
+      - Must NOT answer from model memory alone
