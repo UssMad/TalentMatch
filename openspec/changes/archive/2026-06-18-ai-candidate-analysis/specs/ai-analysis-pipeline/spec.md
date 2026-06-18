@@ -1,16 +1,8 @@
-# AI Analysis Pipeline
-
-> Feature: AI-powered CV analysis for candidates against job offers.
-
-## Purpose
-
-Enable authenticated users to trigger AI-based analysis of a candidate's CV against a job offer's requirements. Analysis runs asynchronously in a background queue, and results (matching score, recommendation, structured data) are stored and displayed.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: AI analysis is triggered asynchronously and produces structured output
 
-Authenticated users SHALL be able to trigger AI-powered CV analysis for a candidate against their job offer. The analysis SHALL run in a background queue. The AI SHALL be called using Laravel AI structured output with a typed DTO (`AnalysisData`). Results SHALL be validated and persisted in the `analyses` table with the structured JSON schema.
+Authenticated users SHALL be able to trigger AI-powered CV analysis for a candidate against their job offer. The analysis SHALL run in a background queue. The AI SHALL be called using Laravel AI structured output with a typed DTO (`AnalysisData`). Results SHALL be validated and persisted in the `analyses` table with the new structured JSON schema.
 
 The structured analysis output SHALL contain:
 - `extracted_skills`: array of all skills identified in the CV
@@ -45,3 +37,10 @@ The structured analysis output SHALL contain:
 #### Scenario: View analysis results
 - **WHEN** an authenticated user views a candidate page with existing analysis
 - **THEN** the page SHALL display the matching score, recommendation, and structured details including skills, experience, education, and languages
+
+## REMOVED Requirements
+
+### Requirement: Analysis output contract (old fields)
+
+**Reason**: The new contract replaces `matched_skills`, `years_experience_fit`, `summary`, and `recommendation_reasoning` with `extracted_skills`, `years_of_experience`, `education_level`, `languages`, `justification`.
+**Migration**: The `analyses` table migration will drop the old logical fields and add new ones. Active records should be re-analyzed.

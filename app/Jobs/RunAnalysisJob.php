@@ -65,7 +65,7 @@ class RunAnalysisJob implements ShouldQueue
                     'job_offer_id' => $this->jobOfferId,
                     'structured_data' => null,
                     'matching_score' => 0,
-                    'recommendation' => 'No Decision',
+                    'recommendation' => 'attente',
                     'raw_ai_response' => ['error' => 'Analysis failed - see logs'],
                 ]);
             }

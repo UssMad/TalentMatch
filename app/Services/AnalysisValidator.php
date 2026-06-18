@@ -16,6 +16,9 @@ class AnalysisValidator
         $this->validateMatchingScore($data);
         $this->validateRecommendation($data);
         $this->validateArrays($data);
+        $this->validateYearsOfExperience($data);
+        $this->validateEducationLevel($data);
+        $this->validateJustification($data);
 
         return empty($this->errors);
     }
@@ -27,7 +30,7 @@ class AnalysisValidator
 
     private function validateRequiredFields(array $data): void
     {
-        $required = ['matched_skills', 'missing_skills', 'years_experience_fit', 'strengths', 'weaknesses', 'summary', 'recommendation_reasoning', 'matching_score', 'recommendation'];
+        $required = ['extracted_skills', 'years_of_experience', 'education_level', 'languages', 'matching_score', 'strengths', 'weaknesses', 'missing_skills', 'recommendation', 'justification'];
 
         foreach ($required as $field) {
             if (! array_key_exists($field, $data)) {
@@ -62,7 +65,7 @@ class AnalysisValidator
 
     private function validateArrays(array $data): void
     {
-        foreach (['matched_skills', 'missing_skills', 'strengths', 'weaknesses'] as $field) {
+        foreach (['extracted_skills', 'languages', 'strengths', 'weaknesses', 'missing_skills'] as $field) {
             if (! isset($data[$field])) {
                 continue;
             }
@@ -70,6 +73,39 @@ class AnalysisValidator
             if (! is_array($data[$field])) {
                 $this->errors[] = "{$field} must be an array";
             }
+        }
+    }
+
+    private function validateYearsOfExperience(array $data): void
+    {
+        if (! isset($data['years_of_experience'])) {
+            return;
+        }
+
+        if (! is_int($data['years_of_experience']) || $data['years_of_experience'] < 0) {
+            $this->errors[] = 'years_of_experience must be a non-negative integer';
+        }
+    }
+
+    private function validateEducationLevel(array $data): void
+    {
+        if (! isset($data['education_level'])) {
+            return;
+        }
+
+        if (! is_string($data['education_level']) || trim($data['education_level']) === '') {
+            $this->errors[] = 'education_level must be a non-empty string';
+        }
+    }
+
+    private function validateJustification(array $data): void
+    {
+        if (! isset($data['justification'])) {
+            return;
+        }
+
+        if (! is_string($data['justification']) || trim($data['justification']) === '') {
+            $this->errors[] = 'justification must be a non-empty string';
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\DTOs;
 
-class AnalysisResult
+class AnalysisData
 {
     public function __construct(
         public readonly array $extractedSkills,
@@ -17,19 +17,19 @@ class AnalysisResult
         public readonly string $justification,
     ) {}
 
-    public static function fromAnalysisData(AnalysisData $data): self
+    public static function fromArray(array $data): self
     {
         return new self(
-            extractedSkills: $data->extractedSkills,
-            yearsOfExperience: $data->yearsOfExperience,
-            educationLevel: $data->educationLevel,
-            languages: $data->languages,
-            matchingScore: $data->matchingScore,
-            strengths: $data->strengths,
-            weaknesses: $data->weaknesses,
-            missingSkills: $data->missingSkills,
-            recommendation: $data->recommendation,
-            justification: $data->justification,
+            extractedSkills: $data['extracted_skills'] ?? [],
+            yearsOfExperience: (int) ($data['years_of_experience'] ?? 0),
+            educationLevel: $data['education_level'] ?? '',
+            languages: $data['languages'] ?? [],
+            matchingScore: (int) ($data['matching_score'] ?? 0),
+            strengths: $data['strengths'] ?? [],
+            weaknesses: $data['weaknesses'] ?? [],
+            missingSkills: $data['missing_skills'] ?? [],
+            recommendation: $data['recommendation'] ?? '',
+            justification: $data['justification'] ?? '',
         );
     }
 

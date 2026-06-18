@@ -14,15 +14,16 @@ You are an expert recruitment analyst. Analyze the following candidate's CV agai
 
 Return ONLY valid JSON with NO markdown formatting, NO code fences, and NO additional text. The JSON must use exactly this structure:
 {
-    "matched_skills": ["skill1", "skill2"],
-    "missing_skills": ["skill1", "skill2"],
-    "years_experience_fit": true or false,
+    "extracted_skills": ["skill1", "skill2"],
+    "years_of_experience": integer,
+    "education_level": "Bachelor's, Master's, PhD, etc.",
+    "languages": ["English", "French"],
+    "matching_score": integer between 0 and 100,
     "strengths": ["strength1", "strength2"],
     "weaknesses": ["weakness1", "weakness2"],
-    "summary": "Brief 2-3 sentence analysis summary",
-    "recommendation_reasoning": "Explanation for the recommendation",
-    "matching_score": integer between 0 and 100,
-    "recommendation": "Strongly Recommend" or "Recommend" or "Consider" or "Not Recommended" or "No Decision"
+    "missing_skills": ["skill1", "skill2"],
+    "recommendation": "convoquer" or "attente" or "rejeter",
+    "justification": "Explanation for the recommendation"
 }
 
 JOB OFFER:
