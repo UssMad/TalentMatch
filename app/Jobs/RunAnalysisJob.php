@@ -63,7 +63,7 @@ class RunAnalysisJob implements ShouldQueue
                 Analysis::create([
                     'candidate_id' => $this->candidateId,
                     'job_offer_id' => $this->jobOfferId,
-                    'structured_data' => null,
+                    'structured_data' => [],
                     'matching_score' => 0,
                     'recommendation' => 'attente',
                     'raw_ai_response' => ['error' => 'Analysis failed - see logs'],
