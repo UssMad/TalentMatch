@@ -62,7 +62,7 @@
                                         $scoreClass = $analysis->matching_score >= 80 ? 'badge-green' : ($analysis->matching_score >= 50 ? 'badge-yellow' : 'badge-red');
                                     @endphp
                                     <span class="{{ $scoreClass }}">{{ $analysis->matching_score }}/100</span>
-                                    <span class="text-xs text-gray-400">|</span>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">|</span>
                                     @php $recValue = $analysis->recommendation?->value ?? $analysis->recommendation; @endphp
                             <span class="{{ $recValue === 'convoquer' ? 'badge-green' : ($recValue === 'attente' ? 'badge-yellow' : 'badge-red') }}">{{ $recValue }}</span>
                                 </div>

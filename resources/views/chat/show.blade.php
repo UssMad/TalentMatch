@@ -31,7 +31,7 @@
                             <div class="flex justify-end">
                                 <div class="max-w-[75%] bg-brand-600 text-white rounded-2xl rounded-br-sm px-4 py-3">
                                     <p class="text-sm">{{ $message['content'] }}</p>
-                                    <p class="text-xs text-brand-200 mt-1.5">{{ \Carbon\Carbon::parse($message['created_at'])->diffForHumans() }}</p>
+                                    <p class="text-xs text-brand-200 dark:text-brand-300 mt-1.5">{{ \Carbon\Carbon::parse($message['created_at'])->diffForHumans() }}</p>
                                 </div>
                             </div>
                         @else

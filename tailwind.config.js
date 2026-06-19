@@ -9,10 +9,12 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    darkMode: 'class',
+
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 brand: {
@@ -52,6 +54,9 @@ export default {
                     800: '#92400e',
                     900: '#78350f',
                 },
+            },
+            width: {
+                sidebar: '200px',
             },
         },
     },
