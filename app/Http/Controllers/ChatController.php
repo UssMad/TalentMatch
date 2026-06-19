@@ -7,6 +7,7 @@ use App\Models\JobOffer;
 use App\Services\ConversationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ChatController extends Controller
@@ -14,6 +15,16 @@ class ChatController extends Controller
     public function __construct(
         private readonly ConversationService $conversationService,
     ) {}
+
+    public function globalIndex(): View
+    {
+        $conversations = request()->user()->conversations()
+            ->with('candidate')
+            ->latest('updated_at')
+            ->paginate(20);
+
+        return view('chat.global-index', compact('conversations'));
+    }
 
     public function index(JobOffer $jobOffer, Candidate $candidate): View
     {
@@ -48,18 +59,28 @@ class ChatController extends Controller
             'message' => ['required', 'string', 'max:5000'],
         ]);
 
-        if ($request->has('conversation_id')) {
-            $result = $this->conversationService->sendMessage(
-                $request->input('conversation_id'),
-                $request->user(),
-                $validated['message'],
-            );
-        } else {
-            $result = $this->conversationService->startConversation(
-                $request->user(),
-                $candidate,
-                $validated['message'],
-            );
+        try {
+            if ($request->has('conversation_id')) {
+                $result = $this->conversationService->sendMessage(
+                    $request->input('conversation_id'),
+                    $request->user(),
+                    $validated['message'],
+                );
+            } else {
+                $result = $this->conversationService->startConversation(
+                    $request->user(),
+                    $candidate,
+                    $validated['message'],
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error('Chat AI error: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return redirect()->route('job-offers.candidates.chat.index', [$jobOffer, $candidate])
+                ->with('error', 'AI service is temporarily unavailable. Please try again.');
         }
 
         return redirect()->route('job-offers.candidates.chat.show', [

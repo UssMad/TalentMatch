@@ -10,6 +10,11 @@ use Stringable;
 
 class GetCandidateAnalysis implements Tool
 {
+    public function name(): string
+    {
+        return 'getCandidateAnalysis';
+    }
+
     public function description(): Stringable|string
     {
         return 'Retrieve the AI analysis results for a candidate by candidate ID. Returns matching score, recommendation, structured data, or null if no analysis exists.';
@@ -17,7 +22,7 @@ class GetCandidateAnalysis implements Tool
 
     public function handle(Request $request): Stringable|string
     {
-        $analysis = Analysis::where('candidate_id', $request->candidateId)
+        $analysis = Analysis::where('candidate_id', $request['candidateId'])
             ->latest()
             ->first();
 

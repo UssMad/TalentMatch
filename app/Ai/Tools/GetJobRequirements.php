@@ -10,6 +10,11 @@ use Stringable;
 
 class GetJobRequirements implements Tool
 {
+    public function name(): string
+    {
+        return 'getJobRequirements';
+    }
+
     public function description(): Stringable|string
     {
         return 'Retrieve the job requirements for a job offer by job offer ID. Returns title, description, required skills, minimum experience, or null if not found.';
@@ -17,7 +22,7 @@ class GetJobRequirements implements Tool
 
     public function handle(Request $request): Stringable|string
     {
-        $jobOffer = JobOffer::find($request->jobOfferId);
+        $jobOffer = JobOffer::find($request['jobOfferId']);
 
         if (! $jobOffer) {
             return json_encode(['job_offer' => null]);

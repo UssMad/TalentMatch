@@ -10,6 +10,11 @@ use Stringable;
 
 class CompareCandidates implements Tool
 {
+    public function name(): string
+    {
+        return 'compareCandidates';
+    }
+
     public function description(): Stringable|string
     {
         return 'Compare two candidates by their IDs. Returns a comparison of their profiles, analysis scores, skills, and recommendations.';
@@ -17,8 +22,8 @@ class CompareCandidates implements Tool
 
     public function handle(Request $request): Stringable|string
     {
-        $candidate1 = Candidate::with('analyses')->find($request->candidateId1);
-        $candidate2 = Candidate::with('analyses')->find($request->candidateId2);
+        $candidate1 = Candidate::with('analyses')->find($request['candidateId1']);
+        $candidate2 = Candidate::with('analyses')->find($request['candidateId2']);
 
         if (! $candidate1 && ! $candidate2) {
             return json_encode(['error' => 'Neither candidate was found.']);

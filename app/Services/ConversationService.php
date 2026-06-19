@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Ai\Agents\RecruitmentAgent;
 use App\Models\Candidate;
+use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Laravel\Ai\Models\Conversation;
 use Laravel\Ai\Models\ConversationMessage;
 
 class ConversationService

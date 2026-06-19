@@ -39,7 +39,7 @@ CONTEXT;
 
             $data = $response instanceof AnalysisData
                 ? $response->toArray()
-                : (is_array($response) ? $response : iterator_to_array($response));
+                : $response->toArray();
         } catch (\Exception $e) {
             Log::error('AI Analysis: Agent call failed', [
                 'candidate_id' => $candidate->id,

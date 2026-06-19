@@ -5,15 +5,13 @@ namespace App\Ai\Agents;
 use App\Ai\Tools\CompareCandidates;
 use App\Ai\Tools\GetCandidateAnalysis;
 use App\Ai\Tools\GetJobRequirements;
-use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
-use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Contracts\HasTools;
 use Laravel\Ai\Promptable;
 
-class RecruitmentAgent implements Agent, Conversational, HasStructuredOutput, HasTools
+class RecruitmentAgent implements Agent, Conversational, HasTools
 {
     use Promptable, RemembersConversations;
 
@@ -40,21 +38,6 @@ IMPORTANT RULES:
             new GetCandidateAnalysis,
             new GetJobRequirements,
             new CompareCandidates,
-        ];
-    }
-
-    public function schema(JsonSchema $schema): array
-    {
-        return [
-            'answer' => $schema->string()
-                ->description('Your answer to the user\'s question')
-                ->required(),
-            'tool_used' => $schema->string()
-                ->description('Name of the tool used, or "none" if no tool was needed')
-                ->required(),
-            'data_found' => $schema->boolean()
-                ->description('Whether the requested data was found in the database')
-                ->required(),
         ];
     }
 }
