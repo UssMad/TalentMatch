@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\AssistantChatController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
@@ -24,6 +25,12 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('job-offers', JobOfferController::class);
 
+    Route::get('job-offers/{jobOffer}/candidates/{candidate}/processing', [CandidateController::class, 'processing'])
+        ->name('job-offers.candidates.processing');
+    Route::get('candidates', [CandidateController::class, 'globalIndex'])->name('candidates.global');
+    Route::get('candidates/{candidate}/status', [CandidateController::class, 'status'])
+        ->name('candidates.status');
+
     Route::resource('job-offers.candidates', CandidateController::class);
 
     Route::post('job-offers/{jobOffer}/candidates/{candidate}/analyze', [AnalysisController::class, 'trigger'])
@@ -35,6 +42,9 @@ Route::middleware('auth')->group(function () {
         ->name('job-offers.candidates.chat.show');
     Route::post('job-offers/{jobOffer}/candidates/{candidate}/chat', [ChatController::class, 'store'])
         ->name('job-offers.candidates.chat.store');
+
+    Route::post('/assistant/chat', [AssistantChatController::class, 'chat'])
+        ->name('assistant.chat');
 });
 
 require __DIR__.'/auth.php';

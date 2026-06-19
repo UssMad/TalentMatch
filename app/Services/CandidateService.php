@@ -5,12 +5,20 @@ namespace App\Services;
 use App\Models\Candidate;
 use App\Models\JobOffer;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CandidateService
 {
     public function list(JobOffer $jobOffer): Collection
     {
         return $jobOffer->candidates()->latest()->get();
+    }
+
+    public function listAll(): LengthAwarePaginator
+    {
+        return Candidate::with('jobOffer', 'analyses')
+            ->latest()
+            ->paginate(20);
     }
 
     public function create(array $data): Candidate

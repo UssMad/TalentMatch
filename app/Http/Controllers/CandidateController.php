@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCandidateRequest;
 use App\Http\Requests\UpdateCandidateRequest;
+use App\Models\Analysis;
 use App\Models\Candidate;
 use App\Models\JobOffer;
 use App\Services\CandidateService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CandidateController extends Controller
@@ -15,6 +18,14 @@ class CandidateController extends Controller
     public function __construct(
         private readonly CandidateService $candidateService,
     ) {}
+
+    public function globalIndex(): View
+    {
+        $candidates = $this->candidateService->listAll();
+        $jobOffers = \App\Models\JobOffer::where('user_id', auth()->id())->latest()->get();
+
+        return view('candidates.global-index', compact('candidates', 'jobOffers'));
+    }
 
     public function index(JobOffer $jobOffer): View
     {
@@ -40,10 +51,9 @@ class CandidateController extends Controller
             'job_offer_id' => $jobOffer->id,
         ]);
 
-        $this->candidateService->create($data);
+        $candidate = $this->candidateService->create($data);
 
-        return redirect()->route('job-offers.candidates.index', $jobOffer)
-            ->with('status', 'Candidate created successfully.');
+        return redirect()->route('job-offers.candidates.processing', [$jobOffer, $candidate]);
     }
 
     public function show(JobOffer $jobOffer, Candidate $candidate): View
@@ -70,6 +80,38 @@ class CandidateController extends Controller
 
         return redirect()->route('job-offers.candidates.index', $jobOffer)
             ->with('status', 'Candidate updated successfully.');
+    }
+
+    public function processing(JobOffer $jobOffer, Candidate $candidate): View
+    {
+        $this->authorize('view', $candidate);
+
+        return view('candidates.processing', compact('jobOffer', 'candidate'));
+    }
+
+    public function status(Candidate $candidate, Request $request): JsonResponse
+    {
+        $this->authorize('view', $candidate);
+
+        $jobOfferId = $request->query('job_offer_id', $candidate->job_offer_id);
+
+        $analysis = Analysis::where('candidate_id', $candidate->id)
+            ->where('job_offer_id', $jobOfferId)
+            ->first();
+
+        if (! $analysis) {
+            return response()->json(['status' => 'processing']);
+        }
+
+        if ($analysis->matching_score > 0) {
+            return response()->json(['status' => 'completed']);
+        }
+
+        if (isset($analysis->raw_ai_response['error'])) {
+            return response()->json(['status' => 'failed']);
+        }
+
+        return response()->json(['status' => 'processing']);
     }
 
     public function destroy(JobOffer $jobOffer, Candidate $candidate): RedirectResponse

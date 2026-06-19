@@ -1,0 +1,39 @@
+@props([
+    'icon' => 'default',
+    'title' => '',
+    'message' => '',
+    'actionUrl' => null,
+    'actionLabel' => null,
+])
+
+@php
+    $icons = [
+        'briefcase' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>',
+        'users' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>',
+        'chat' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>',
+        'search' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>',
+        'default' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>',
+    ];
+
+    $svg = $icons[$icon] ?? $icons['default'];
+@endphp
+
+<div {{ $attributes->merge(['class' => 'card border-dashed border-gray-200 dark:border-gray-700']) }}>
+    <div class="py-12 text-center">
+        <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {!! $svg !!}
+        </svg>
+        @if($title)
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">{{ $title }}</h3>
+        @endif
+        @if($message)
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ $message }}</p>
+        @endif
+        @if($actionUrl && $actionLabel)
+            <a href="{{ $actionUrl }}" class="btn-primary">
+                {{ $actionLabel }}
+            </a>
+        @endif
+        {{ $slot }}
+    </div>
+</div>
